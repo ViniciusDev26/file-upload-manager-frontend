@@ -12,6 +12,7 @@ import axios from "axios"
 import { Progress } from "@/components/ui/progress"
 import { useDropzone } from "react-dropzone"
 import { toast } from "sonner"
+import { Helmet } from "react-helmet-async"
 
 const uploadFormSchema = z.object({
   file: z.instanceof(File).nullable(),
@@ -103,87 +104,90 @@ export const Home = () => {
   }
 
   return (
-    <div className="flex h-screen items-center justify-center ">
-      <Card className="w-1/4 flex flex-col items-center justify-center bg-card text-card-foreground">
-        <CardHeader>
-          <p className="text-xl">Upload File (MAX: 1GB)</p>
-        </CardHeader>
-        <CardContent className="gap-2 w-full">
-          <Form {...uploadForm}>
-            <form onSubmit={uploadForm.handleSubmit(submitFile)}>
-              <FormField 
-                name="files"
-                render={
-                  () => (
-                    <FormItem>
-                      <FormControl>
-                        <div {...getRootProps()}>
-                          {uploadForm.getValues("file") ? (
-                            <Label htmlFor="file" className="border border-dashed h-[256px] w-full flex gap-4 flex-col items-center justify-center rounded text-muted-foreground">
-                              <FileArchive size={48} className="mr-4" />
-                              <div>
-                                <p className="text-center">{uploadForm.getValues("file")?.name}</p>
-                                <p className="text-center">{convertBytesToMb(uploadForm.getValues("file")?.size ?? 0).toFixed(2)} MB</p>
-                              </div>
+    <>
+      <Helmet title="Home" />
+      <div className="flex h-screen items-center justify-center">
+        <Card className="w-1/4 flex flex-col items-center justify-center bg-card text-card-foreground">
+          <CardHeader>
+            <p className="text-xl">Upload File (MAX: 1GB)</p>
+          </CardHeader>
+          <CardContent className="gap-2 w-full">
+            <Form {...uploadForm}>
+              <form onSubmit={uploadForm.handleSubmit(submitFile)}>
+                <FormField 
+                  name="files"
+                  render={
+                    () => (
+                      <FormItem>
+                        <FormControl>
+                          <div {...getRootProps()}>
+                            {uploadForm.getValues("file") ? (
+                              <Label htmlFor="file" className="border border-dashed h-[256px] w-full flex gap-4 flex-col items-center justify-center rounded text-muted-foreground">
+                                <FileArchive size={48} className="mr-4" />
+                                <div>
+                                  <p className="text-center">{uploadForm.getValues("file")?.name}</p>
+                                  <p className="text-center">{convertBytesToMb(uploadForm.getValues("file")?.size ?? 0).toFixed(2)} MB</p>
+                                </div>
 
-                              {uploadForm.getValues("started") && (
-                                <>
-                                  <Progress className="w-[60%] rounded mb-[-8px]" value={uploadForm.getValues("percent")} />
-                                  <p className="text-center">{uploadForm.getValues("percent")}%</p>
-                                </>
-                              )}
-                            </Label>
-                          ) : 
-                            (
-                              <Label htmlFor="file" className="border border-dashed h-[256px] w-full flex items-center justify-center text-muted-foreground">
-                                <FileArchive size={32} className="mr-4" />
-                                {
-                                  isDragActive ? (
-                                    <p className="text-center">Drop your files here</p>
-                                  ) : (
-                                    <p className="text-center">Drag and drop your files here</p>
-                                  )
-                                }
+                                {uploadForm.getValues("started") && (
+                                  <>
+                                    <Progress className="w-[60%] rounded mb-[-8px]" value={uploadForm.getValues("percent")} />
+                                    <p className="text-center">{uploadForm.getValues("percent")}%</p>
+                                  </>
+                                )}
                               </Label>
-                            )
-                          }
-                          <Input id="file" {...getInputProps()} accept="application/zip" className="hidden" onChange={e => handleDrop([e.target.files?.item(0) ?? null])} />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )
-                }
-              />
-              <div className="mt-4 flex flex-row justify-end">
-                {
-                  uploadForm.getValues("isUploading") && (
-                    <Button onClick={abortUpload}>Cancel</Button>
-                  )
-                }
-                {
-                  uploadForm.getValues("shareUrl") && (
-                    <Button onClick={() => uploadForm.reset()}>Upload another file</Button>
-                  )
-                }
-                {
-                  !uploadForm.getValues("started") && (
-                    <Button disabled={uploadForm.getValues("isUploading")} type="submit">Upload</Button>
-                  )
-                }
-              </div>
-            </form>
-          </Form>
-        </CardContent>
-        {
-          uploadForm.getValues("shareUrl") && (
-            <CardFooter className="border rounded w-full flex items-center justify-center py-4">
-              <Button variant="link" onClick={copyLinkToClipboard}><Copy /></Button>
-              <p className="text-sm">{uploadForm.getValues("shareUrl")}</p>
-            </CardFooter>
-          )
-        }
-      </Card>
-    </div>
+                            ) : 
+                              (
+                                <Label htmlFor="file" className="border border-dashed h-[256px] w-full flex items-center justify-center text-muted-foreground">
+                                  <FileArchive size={32} className="mr-4" />
+                                  {
+                                    isDragActive ? (
+                                      <p className="text-center">Drop your files here</p>
+                                    ) : (
+                                      <p className="text-center">Drag and drop your files here</p>
+                                    )
+                                  }
+                                </Label>
+                              )
+                            }
+                            <Input id="file" {...getInputProps()} accept="application/zip" className="hidden" onChange={e => handleDrop([e.target.files?.item(0) ?? null])} />
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )
+                  }
+                />
+                <div className="mt-4 flex flex-row justify-end">
+                  {
+                    uploadForm.getValues("isUploading") && (
+                      <Button onClick={abortUpload}>Cancel</Button>
+                    )
+                  }
+                  {
+                    uploadForm.getValues("shareUrl") && (
+                      <Button onClick={() => uploadForm.reset()}>Upload another file</Button>
+                    )
+                  }
+                  {
+                    !uploadForm.getValues("started") && (
+                      <Button disabled={uploadForm.getValues("isUploading")} type="submit">Upload</Button>
+                    )
+                  }
+                </div>
+              </form>
+            </Form>
+          </CardContent>
+          {
+            uploadForm.getValues("shareUrl") && (
+              <CardFooter className="border rounded w-full flex items-center justify-center py-4">
+                <Button variant="link" onClick={copyLinkToClipboard}><Copy /></Button>
+                <p className="text-sm">{uploadForm.getValues("shareUrl")}</p>
+              </CardFooter>
+            )
+          }
+        </Card>
+      </div>
+    </>
   )
 }
