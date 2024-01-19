@@ -3,10 +3,10 @@ import { Outlet } from "react-router-dom"
 
 export const RootLayout = () => {
   return (
-    <div className="overflow-y-hidden">
+    <div className="max-h-screen h-screen overflow-hidden">
       <Header />
-
-      <div className="5/6">
+      
+      <div className="mx-auto h-full">
         <Outlet />
       </div>
     </div>

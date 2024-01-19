@@ -11,6 +11,7 @@ import { api } from "@/lib/api"
 import axios from "axios"
 import { Progress } from "@/components/ui/progress"
 import { useDropzone } from "react-dropzone"
+import { toast } from "sonner"
 
 const uploadFormSchema = z.object({
   file: z.instanceof(File).nullable(),
@@ -79,16 +80,20 @@ export const Home = () => {
 
     uploadForm.setValue("shareUrl", `${api.defaults.baseURL}/file/${data.id}`)
     uploadForm.setValue("isUploading", false)
+
+    toast.success("File uploaded successfully")
   }
 
   function abortUpload() {
     requestController.abort()
     uploadForm.setValue("isUploading", false)
     uploadForm.setValue("shareUrl", '')
+
+    toast.error("File upload aborted")
   }
 
   function copyLinkToClipboard() {
-    // Mostrar mensagem de copiado com sucesso
+    toast.success("Link copied to clipboard")
     navigator.clipboard.writeText(uploadForm.getValues("shareUrl"))
     uploadForm.setValue("copied", true)
   }
@@ -172,7 +177,7 @@ export const Home = () => {
         </CardContent>
         {
           uploadForm.getValues("shareUrl") && (
-            <CardFooter className="border rounded flex items-center justify-center py-4">
+            <CardFooter className="border rounded w-full flex items-center justify-center py-4">
               <Button variant="link" onClick={copyLinkToClipboard}><Copy /></Button>
               <p className="text-sm">{uploadForm.getValues("shareUrl")}</p>
             </CardFooter>
