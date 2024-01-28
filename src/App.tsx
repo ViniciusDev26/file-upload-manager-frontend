@@ -9,8 +9,6 @@ export function App() {
     <ThemeProvider defaultTheme="dark">
       <HelmetProvider>
         <Helmet titleTemplate="%s | File Manager Tool"/>
-
-
         <RouterProvider router={router} />
         <Toaster richColors />
       </HelmetProvider>

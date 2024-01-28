@@ -57,10 +57,11 @@ export const Home = () => {
     })
 
     
-    uploadForm.watch("percent", 0)
-
+    
     uploadForm.setValue("started", true)
     uploadForm.setValue("isUploading", true)
+    uploadForm.setValue("percent", 0)
+    uploadForm.trigger("started");
 
     const buffer = await params.file.arrayBuffer()
     await axios.put(data.url, buffer, {
@@ -107,7 +108,7 @@ export const Home = () => {
     <>
       <Helmet title="Home" />
       <div className="flex h-screen items-center justify-center">
-        <Card className="w-1/4 flex flex-col items-center justify-center bg-card text-card-foreground">
+        <Card className="w-full md:w-3/4 lg:w-2/4 flex flex-col items-center justify-center bg-card text-card-foreground">
           <CardHeader>
             <p className="text-xl">Upload File (MAX: 1GB)</p>
           </CardHeader>
