@@ -44,9 +44,6 @@ export const Home = () => {
 	const { getRootProps, getInputProps, isDragActive } = useDropzone({
 		onDrop: handleDrop,
 		noClick: true,
-		accept: {
-			"application/zip": [".zip"],
-		},
 	});
 
 	function handleDrop(acceptedFiles: Array<File | null>) {
@@ -180,7 +177,6 @@ export const Home = () => {
 													<Input
 														id="file"
 														{...getInputProps()}
-														accept="application/zip"
 														className="hidden"
 														onChange={(e) =>
 															handleDrop([e.target.files?.item(0) ?? null])
